@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Shop App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'MontAl',
         visualDensity: VisualDensity.adaptivePlatformDensity,
         appBarTheme: AppBarTheme(centerTitle: true),
       ),

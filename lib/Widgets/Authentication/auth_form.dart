@@ -76,7 +76,7 @@ class _AuthFormState extends State<AuthForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height,     
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(MediaQuery.of(context).size.width * .09),
       child: Column(

@@ -84,7 +84,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white, width: 2),
                   ),
-                  hintText: "____@example.com",
+                  hintText: "____@example.com",    
                   hintStyle: TextStyle(color: Colors.white),
                   labelText: "Email",
                   labelStyle: TextStyle(color: Colors.white),
@@ -100,7 +100,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     child: CircularProgressIndicator(),
                   )
                 : Container(
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(context).size.width, 
                     child: FlatButton(
                       child: Text(
                         'Send',
