@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_shop/Providers/user_provider.dart';
+import 'package:my_shop/Screens/collecting_data_screen.dart';
 import 'package:my_shop/Screens/home_screen.dart';
 import 'package:my_shop/Widgets/Authentication/auth_title.dart';
 import 'package:email_validator/email_validator.dart';
@@ -45,7 +46,7 @@ class _AuthFormState extends State<AuthForm> {
       String error = await Provider.of<UserProvider>(context, listen: false)
           .fetchLogin(email, password);
       if (error == null) {
-        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(CollectingDataScreen.routeName);
       } else {
         setState(() {
           isLoading = false;
@@ -63,7 +64,7 @@ class _AuthFormState extends State<AuthForm> {
       String error = await Provider.of<UserProvider>(context, listen: false)
           .fetchSignOut(email, password);
       if (error == null) {
-        Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(CollectingDataScreen.routeName);
       } else {
         setState(() {
           isLoading = false;

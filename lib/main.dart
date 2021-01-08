@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_shop/Providers/user_provider.dart';
 import 'package:my_shop/Screens/authentication_screen.dart';
+import 'package:my_shop/Screens/collecting_data_screen.dart';
 import 'package:my_shop/Screens/home_screen.dart';
 import 'package:my_shop/Screens/splash.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shop App',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         fontFamily: 'MontAl',
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
             return SplashScreen();
           } else {
             if (FirebaseAuth.instance.currentUser != null) {
-              return HomeScreen();
+              return CollectingDataScreen();
             } else {
               return AuthenticationScreen();
             }
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeScreen.routeName: (context) => HomeScreen(),
         AuthenticationScreen.routeName: (context) => AuthenticationScreen(),
+        CollectingDataScreen.routeName: (context) => CollectingDataScreen(),
       },
     );
   }
