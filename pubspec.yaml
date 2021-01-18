@@ -24,12 +24,17 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
-  firebase_core: ^0.5.3
-  firebase_auth: ^0.18.4+1
+  firebase_core: ^0.7.0
+  firebase_auth: ^0.20.0+1
   provider: ^4.3.2+3
   email_validator: '^1.0.5'
   image_picker: ^0.6.7+20
   page_indicator: ^0.3.0
+  google_maps_flutter: ^1.0.10
+  location: ^3.2.1
+  geocoder: ^0.2.1
+  cloud_firestore: ^0.16.0
+  firebase_storage: ^7.0.0
 
 
 dev_dependencies:

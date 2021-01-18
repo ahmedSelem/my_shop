@@ -6,6 +6,7 @@ import 'package:my_shop/Screens/authentication_screen.dart';
 import 'package:my_shop/Screens/collecting_data_screen.dart';
 import 'package:my_shop/Screens/home_screen.dart';
 import 'package:my_shop/Screens/splash.dart';
+import 'package:my_shop/Screens/transit_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
             return SplashScreen();
           } else {
             if (FirebaseAuth.instance.currentUser != null) {
-              return CollectingDataScreen();
+              return TransitScreen();
             } else {
               return AuthenticationScreen();
             }
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (context) => HomeScreen(),
         AuthenticationScreen.routeName: (context) => AuthenticationScreen(),
         CollectingDataScreen.routeName: (context) => CollectingDataScreen(),
+        TransitScreen.routeName: (context) => TransitScreen(),
       },
     );
   }

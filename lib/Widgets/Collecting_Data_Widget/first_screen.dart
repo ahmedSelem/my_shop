@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_shop/Screens/authentication_screen.dart';
 import 'package:my_shop/Widgets/Collecting_Data_Widget/circle_image.dart';
 import 'package:my_shop/Widgets/Collecting_Data_Widget/collecting_title.dart';
 
 class FirstScreen extends StatefulWidget {
+  final Function nextPage, promptCancel;
+  FirstScreen(this.nextPage, this.promptCancel);
   @override
   _FirstScreenState createState() => _FirstScreenState();
 }
@@ -13,6 +17,7 @@ class FirstScreen extends StatefulWidget {
 class _FirstScreenState extends State<FirstScreen> {
   FocusNode phoneNumberNode;
   File image;
+  String userName, phoneNumber;
   @override
   void initState() {
     super.initState();
@@ -72,6 +77,16 @@ class _FirstScreenState extends State<FirstScreen> {
     }
   }
 
+  bool toValidateToNextPage() {
+    bool valid = true;
+    if (image == null) return valid = false;
+    if (userName == null || userName.length <= 2) return valid = false;
+    if (phoneNumber == null ||
+        !phoneNumber.startsWith('01') ||
+        phoneNumber.length < 11) return valid = false;
+    return valid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -117,13 +132,18 @@ class _FirstScreenState extends State<FirstScreen> {
                       children: [
                         TextFormField(
                           textInputAction: TextInputAction.next,
+                          onChanged: (value) {
+                            setState(() {
+                              userName = value;
+                            });
+                          },
                           onFieldSubmitted: (vlaue) {
                             phoneNumberNode.requestFocus();
                           },
                           decoration: InputDecoration(
                             hintText: 'ex: Ahmed Selem',
                             hintStyle: TextStyle(color: Colors.black),
-                            labelText: 'Full Name',
+                            labelText: 'user Name',
                             labelStyle: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -131,6 +151,11 @@ class _FirstScreenState extends State<FirstScreen> {
                         TextFormField(
                           focusNode: phoneNumberNode,
                           keyboardType: TextInputType.phone,
+                          onChanged: (value) {
+                            setState(() {
+                              phoneNumber = value;
+                            });
+                          },
                           decoration: InputDecoration(
                             hintText: 'ex: ####225',
                             hintStyle: TextStyle(color: Colors.black),
@@ -148,17 +173,24 @@ class _FirstScreenState extends State<FirstScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              RaisedButton(
-                color: Theme.of(context).primaryColor,
+              FlatButton(
+                color: Colors.white,
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                 child: Text(
-                  'Back',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  'cancel',
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor, fontSize: 18),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  if (await widget.promptCancel() == false) {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context)
+                        .pushReplacementNamed(AuthenticationScreen.routeName);
+                  }
+                },
               ),
               RaisedButton(
                 color: Theme.of(context).primaryColor,
@@ -170,7 +202,30 @@ class _FirstScreenState extends State<FirstScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  if (toValidateToNextPage() == true) {
+                    widget.nextPage(image, userName, phoneNumber);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (bulider) {
+                        return AlertDialog(
+                          title: Text('Please Check Your Date'),
+                          content: Text(
+                              'Please Make Sure The Image will Collecting, user Name Containes More Than 3 Character And Phone Number Containes 01 And More Than 11 Numbers to You Can Open The Second Screen.'),
+                          actions: [
+                            FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('Ok'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
               ),
             ],
           ),

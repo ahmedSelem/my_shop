@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
+import 'package:my_shop/modal/user.dart' as myShop;
 
 class UserProvider with ChangeNotifier {
-  var user;
+  myShop.User currentUser;
 
   Future<String> fetchSignOut(String email, String password) async {
     try {
@@ -58,6 +60,48 @@ class UserProvider with ChangeNotifier {
     } on FirebaseAuthException catch (error) {
       print(error.code);
       return "Please Try Agin";
+    }
+  }
+
+  Future<String> uploadData(File uploadImage, String userName,
+      String phoneNumber, String currentAddress) async {
+    try {
+      String userId = FirebaseAuth.instance.currentUser.uid;
+      String email = FirebaseAuth.instance.currentUser.email;
+      final ref = FirebaseStorage.instance
+          .ref('Users/$userId.${uploadImage.path.split('.').last}');
+      await ref.putFile(uploadImage);
+      String photoUrl = await ref.getDownloadURL();
+
+      FirebaseFirestore.instance.collection('Users').doc(userId).set({
+        'image': photoUrl,
+        'email': email,
+        'userName': userName,
+        'phoneNumber': phoneNumber,
+        'currentAddress': currentAddress,
+      });
+      return null;
+    } catch (error) {
+      return 'error Accourrd';
+    }
+  }
+
+  Future<bool> profileComplete() async {
+    try {
+      String userId = FirebaseAuth.instance.currentUser.uid;
+      String email = FirebaseAuth.instance.currentUser.email;
+      final getDocument = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .get();
+      if (getDocument.exists) {
+       currentUser = myShop.User.formFireBase(email, userId, getDocument);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
     }
   }
 }
